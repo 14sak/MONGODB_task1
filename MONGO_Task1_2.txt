@@ -1,0 +1,8 @@
+SQL QUERY:
+
+select * from customer where city in ('Los Angeles','New York City') and age <=33
+
+
+MONGODB:
+
+db.customer.find({$and:[{city:{$in:["Los Angeles","New York City"]}},{age:{$lte:33}}]})

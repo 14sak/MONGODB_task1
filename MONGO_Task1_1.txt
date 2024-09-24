@@ -1,0 +1,17 @@
+SQL QUERY :
+
+select segment,count(customer_id) from customer
+where state ='Texas'
+group by segment
+
+
+MONGODB :
+
+db.customer.aggregate(
+[
+ { 
+   $match:{state:"Texas"}},
+   {$group:{_id:"segment",count_customer_id:{$sum:1}}
+ }
+]
+)
