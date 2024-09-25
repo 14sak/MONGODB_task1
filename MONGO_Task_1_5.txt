@@ -1,0 +1,10 @@
+SQL QUERY:
+
+select customer_id,customer_name from customer where city='Los Angeles'
+group by customer_name,customer_id
+
+
+
+MONGODB:
+
+db.customer.aggregate([{$match:{city:"Los Angeles"}},{$group:{_id:{cust_id:"$customer_id",cust_name:"$customer_name"}}}])
