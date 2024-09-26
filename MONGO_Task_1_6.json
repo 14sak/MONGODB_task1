@@ -1,0 +1,38 @@
+SQL QUERY:
+
+select state,count(postal_code) from customer where region='South'
+group by state
+
+MONGODB:
+
+db.customer.aggregate([{ $match:{region:"South"}},{$group:{_id:"$state",count_postal_code:{$sum:1}}}])
+
+
+Stages:
+[
+  {
+    $match:
+      /*
+  select state,count(postal_code)
+  from customer 
+  where region='South' 
+  group by state
+   */
+      {
+        region: "South"
+      }
+  },
+  {
+    $group:
+      /**
+       * _id: The id of the group.
+       * fieldN: The first field name.
+       */
+      {
+        _id: "$state",
+        count_postal_code: {
+          $sum: 1
+        }
+      }
+  }
+]

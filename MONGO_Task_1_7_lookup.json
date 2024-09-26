@@ -1,0 +1,87 @@
+SQL QUERY:
+
+select s.order_id ,p.category from sales as s 
+inner join product as p
+on p.product_id=s.product_id
+where p.category='Office Supplies'
+group by s.order_id ,p.category
+
+MONGODB:
+
+db.sales.aggregate([{$lookup:{from:"product",localField:"product_id",foreignField:"prod_id",as:"Joins_output"}},
+{$unwind:{path:"$Joins_output"}},
+{$match: {"Joins_output.category":"Office Supplies"}},
+{$group:{_id:{OrderID:"$order_id",Category:"$Joins_output.category"}}},
+{$project:{_id:0,OrderID:"$_id.OrderID",Category:"$_id.Category"}}])
+
+
+Stages:
+
+[
+  {
+    $lookup:
+      /*
+   
+  select s.order_id ,p.category from sales as s 
+  inner join product as p
+  on p.product_id=s.product_id
+  where p.category='Office Supplies'
+  group by s.order_id ,p.category
+  
+  * from: The target collection.
+  * localField: The local join field.
+  * foreignField: The target join field.
+  * as: The name for the results.
+  * pipeline: Optional pipeline to run on the foreign collection.
+  * let: Optional variables to use in the pipeline field stages.
+  */
+      {
+        from: "product",
+        localField: "product_id",
+        foreignField: "prod_id",
+        as: "Joins_output"
+      }
+  },
+  {
+    $unwind: {
+      path: "$Joins_output"
+    }
+  },
+  {
+    $match:
+      /**
+       * query: The query in MQL.
+       */
+      {
+        "Joins_output.category": "Office Supplies"
+      }
+  },
+  {
+    $group:
+      /**
+       * _id: The id of the group.
+       * fieldN: The first field name.
+       */
+      {
+        _id: {
+          orderId: "$order_id",
+          Category: "$Joins_output.category"
+        },
+        sum: {
+          $sum: 1
+        }
+      }
+  },
+  {
+    $project:
+      /**
+       * specifications: The fields to
+       *   include or exclude.
+       */
+      {
+        _id: 0,
+        order_id: "$_id.orderId",
+        category: "$_id.Category"
+      }
+  }
+] 

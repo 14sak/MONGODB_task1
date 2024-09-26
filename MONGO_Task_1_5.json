@@ -1,0 +1,50 @@
+SQL QUERY:
+
+select customer_id,customer_name from customer where city='Los Angeles' and age<40
+group by customer_name,customer_id
+ 
+
+
+MONGODB:
+
+db.customer.aggregate([{$match:{$and:[{city:"Los Angeles"},{age:{$lt:40}}]}},{$group:{_id:{cust_id:"$customer_id",cust_name:"$customer_name"}}}])
+
+
+Stages:
+
+[
+  {
+    $match:
+      /*select customer_id,customer_name 
+  from customer 
+  where city='Los Angeles' and age<40
+  group by customer_name,customer_id
+   
+  */
+      {
+        $and: [
+          {
+            city: "Los Angeles"
+          },
+          {
+            age: {
+              $lt: 40
+            }
+          }
+        ]
+      }
+  },
+  {
+    $group:
+      /**
+       * _id: The id of the group.
+       * fieldN: The first field name.
+       */
+      {
+        _id: {
+          cust_id: "$customer_id",
+          cust_name: "$customer_name"
+        }
+      }
+  }
+]

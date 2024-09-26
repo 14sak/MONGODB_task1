@@ -1,8 +1,0 @@
-SQL QUERY:
-
-select distinct order_id from sales where ship_mode = 'First Class'
-
-
-MONGODB:
-
-db.sales.distinct("order_id",{ship_mode:"First Class"})

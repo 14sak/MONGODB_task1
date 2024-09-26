@@ -1,8 +1,0 @@
-SQL QUERY:
-
-select state,count(postal_code) from customer where region='South'
-group by state
-
-MONGODB:
-
-db.customer.aggregate([{ $match:{region:"South"}},{$group:{_id:"$state",count_postal_code:{$sum:1}}}])

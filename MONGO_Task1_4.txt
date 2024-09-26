@@ -1,9 +1,0 @@
-SQL QUERY:
-
-select sub_category,count(product_id) from product where category='Furniture'
-group by sub_category
-
-
-MONGODB:
-
-db.product.aggregate([{$match:{category:"Furniture"}},{$group:{_id:"$sub_category",count_product_id:{$count:{}}}}])

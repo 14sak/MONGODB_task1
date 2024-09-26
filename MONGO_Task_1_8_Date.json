@@ -1,0 +1,56 @@
+
+SQL QUERY:
+
+select order_date,count(order_line) from sales
+where ship_date between'2016_01-01' and '2016-05-31'
+group by order_date
+order by count(order_line) desc 
+
+MONGODB:
+
+db.sales.aggregate([{$match:{ship_date:{$gte:ISODate("2016-01-01"),$lte:ISODate("2016-05-31")}}},
+{$group:{_id:"$order_date",count_order_line:{$sum:1}}},
+{$sort:{count_order_line:-1}}])
+
+Stages:
+
+[
+  {
+    $match:
+      /*select order_date,count(order_line) 
+  from sales
+  where ship_date between
+  '2016_01-01' and '2016-05-31'
+  group by order_date
+  order by count(order_line) desc  
+   */
+      {
+        ship_date: {
+          $gte: ISODate("2016-01-01"),
+          $lte: ISODate("2016-05-31")
+        }
+      }
+  },
+  {
+    $group:
+      /**
+       * _id: The id of the group.
+       * fieldN: The first field name.
+       */
+      {
+        _id: "$order_date",
+        count_order_line: {
+          $sum: 1
+        }
+      }
+  },
+  {
+    $sort:
+      /**
+       * Provide any number of field/order pairs.
+       */
+      {
+        count_order_line: -1
+      }
+  }
+]
